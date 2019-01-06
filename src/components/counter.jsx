@@ -7,12 +7,27 @@ class Counter extends Component {
     brewers: ["Hi-Wheel", "Epic", "Miller/Coors"]
   };
 
+  // constructor() {
+  //   super();
+  //   this.handleDecrement = this.handleDecrement.bind(this);
+  // }
+
+  handleDecrement = product => {
+    console.log(product);
+    this.setState({ count: this.state.count + 1 });
+  };
+
   render() {
     return (
       <React.Fragment>
         <span className={this.getBadgeClasses()}>{this.disableButton()}</span>
-        <button class="btn btn-primary">Order</button>
-        <table class="table table-hover">
+        <button
+          onClick={() => this.handleDecrement({ id: 1 })}
+          className="btn btn-primary"
+        >
+          Order
+        </button>
+        <table className="table table-hover">
           <thead>
             <tr>
               <th scope="col">Name</th>
