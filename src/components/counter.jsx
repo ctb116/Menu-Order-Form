@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 class Counter extends Component {
   state = {
@@ -42,6 +43,7 @@ class Counter extends Component {
             ))}
           </tbody>
         </table>
+        Favorite Food: <FontAwesomeIcon icon="igloo" />
       </React.Fragment>
     );
   }
