@@ -1,11 +1,11 @@
 import React, { Component } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { getDrinks } from "../services/fakeDrinksService";
 
 class Counter extends Component {
   state = {
-    count: 1,
-    names: ["Ruby Zozzle", "Tart N Juicy", "Hamms"],
-    brewers: ["Hi-Wheel", "Epic", "Miller/Coors"]
+    drinks: getDrinks(),
+    drinksInCart: {}
   };
 
   // constructor() {
@@ -13,33 +13,60 @@ class Counter extends Component {
   //   this.handleDecrement = this.handleDecrement.bind(this);
   // }
 
-  handleDecrement = product => {
-    console.log(product);
-    this.setState({ count: this.state.count + 1 });
+  handleDecrement = drink => {
+    drink.drink.numberInStock -= 1;
+    const drinkClicked = this.state.drinks.filter(d => d._id);
+    this.setState({ drinkClicked });
+  };
+
+  handleAddToCart = drink => {
+    let drinksInCart = this.state.drinksInCart;
+    const drinkOrdered = drink.drink.name;
+    if (!drinksInCart[drinkOrdered]) {
+      drinksInCart[drinkOrdered] = 1;
+    } else {
+      drinksInCart[drinkOrdered]++;
+    }
+    console.log(drinksInCart);
+    this.setState({ drinksInCart });
+  };
+
+  handleOrder = drink => {
+    this.handleDecrement(drink);
+    this.handleAddToCart(drink);
   };
 
   render() {
     return (
       <React.Fragment>
+        <span>{this.state.drinksInCart.toString()}</span>
         <span className={this.getBadgeClasses()}>{this.disableButton()}</span>
-        <button
-          onClick={() => this.handleDecrement({ id: 1 })}
-          className="btn btn-primary"
-        >
-          Order
-        </button>
         <table className="table table-hover">
           <thead>
             <tr>
-              <th scope="col">Name</th>
-              <th scope="col">Brewer</th>
-              <th scope="col">Description</th>
-              <th scope="col">ABV</th>
+              <th>Name</th>
+              <th>Brewer</th>
+              <th>ABV</th>
+              <th>Price</th>
+              <th>Available</th>
+              <th> </th>
             </tr>
           </thead>
           <tbody>
-            {this.state.brewers.map(brewer => (
-              <tr key={brewer}>{brewer}</tr>
+            {this.state.drinks.map(drink => (
+              <tr key={drink._id}>
+                <td>{drink.name}</td>
+                <td>{drink.brewer}</td>
+                <td>{drink.abv}</td>
+                <td>{drink.price}</td>
+                <td>{drink.numberInStock}</td>
+                <button
+                  onClick={() => this.handleOrder({ drink })}
+                  className="btn btn-primary"
+                >
+                  Order
+                </button>
+              </tr>
             ))}
           </tbody>
         </table>
