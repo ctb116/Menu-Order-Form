@@ -56,10 +56,9 @@ class Counter extends Component {
             </p>
           ))}
           <span style={this.getPriceTotalClassses()}>
-            {this.state.drinksTotalPrice}
+            ${this.state.drinksTotalPrice}
           </span>
         </div>
-        <span className={this.getBadgeClasses()}>{this.disableButton()}</span>
         <table className="table table-hover">
           <thead>
             <tr>
@@ -80,7 +79,9 @@ class Counter extends Component {
                 <td>{drink.price}</td>
                 <td>{drink.numberInStock}</td>
                 <button
+                  type="button"
                   onClick={() => this.handleOrder({ drink })}
+                  disabled={this.getDisabledBool(drink)}
                   className="btn btn-primary"
                 >
                   Order
@@ -94,11 +95,11 @@ class Counter extends Component {
     );
   }
 
-  getBadgeClasses() {
-    let classes = "badge badge-";
-    classes += this.state.count === 0 ? "warning" : "primary";
-    return classes;
-  }
+  // getBadgeClasses() {
+  //   let classes = "badge badge-";
+  //   classes += this.state.count === 0 ? "warning" : "primary";
+  //   return classes;
+  // }
 
   getPriceTotalClassses() {
     let displayFalse = {
@@ -114,9 +115,12 @@ class Counter extends Component {
     }
   }
 
-  disableButton() {
-    const { count } = this.state;
-    return count === 0 ? "Zero" : count;
+  getDisabledBool(drink) {
+    if (drink.numberInStock === 0) {
+      return true;
+    } else {
+      return false;
+    }
   }
 }
 
