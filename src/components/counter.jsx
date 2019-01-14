@@ -5,7 +5,8 @@ import { getDrinks } from "../services/fakeDrinksService";
 class Counter extends Component {
   state = {
     drinks: getDrinks(),
-    drinksInCart: {}
+    drinksInCart: {},
+    drinksTotalPrice: 0
   };
 
   // constructor() {
@@ -31,15 +32,33 @@ class Counter extends Component {
     this.setState({ drinksInCart });
   };
 
+  handlePriceTotal = drink => {
+    let drinkPrice = drink.drink.price;
+    let drinksTotalPrice = (this.state.drinksTotalPrice += drinkPrice);
+    this.setState({ drinksTotalPrice });
+    console.log(drinksTotalPrice);
+  };
+
   handleOrder = drink => {
     this.handleDecrement(drink);
     this.handleAddToCart(drink);
+    this.handlePriceTotal(drink);
   };
 
   render() {
+    let drinksInCartArr = Object.entries(this.state.drinksInCart);
     return (
       <React.Fragment>
-        <span>{this.state.drinksInCart.toString()}</span>
+        <div>
+          {drinksInCartArr.map(drink => (
+            <p>
+              {drink[0]}: {drink[1]}
+            </p>
+          ))}
+          <span style={this.getPriceTotalClassses()}>
+            {this.state.drinksTotalPrice}
+          </span>
+        </div>
         <span className={this.getBadgeClasses()}>{this.disableButton()}</span>
         <table className="table table-hover">
           <thead>
@@ -79,6 +98,20 @@ class Counter extends Component {
     let classes = "badge badge-";
     classes += this.state.count === 0 ? "warning" : "primary";
     return classes;
+  }
+
+  getPriceTotalClassses() {
+    let displayFalse = {
+      display: "none"
+    };
+    let displayTrue = {
+      display: "inline"
+    };
+    if (this.state.drinksTotalPrice === 0) {
+      return displayFalse;
+    } else {
+      return displayTrue;
+    }
   }
 
   disableButton() {
