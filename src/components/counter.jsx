@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { getDrinks } from "../services/fakeDrinksService";
+import "../styles/counter.css";
 
 class Counter extends Component {
   state = {
@@ -49,48 +50,70 @@ class Counter extends Component {
     let drinksInCartArr = Object.entries(this.state.drinksInCart);
     return (
       <React.Fragment>
-        <div>
-          {drinksInCartArr.map(drink => (
-            <p>
-              {drink[0]}: {drink[1]}
-            </p>
-          ))}
-          <span style={this.getPriceTotalClassses()}>
-            ${this.state.drinksTotalPrice}
-          </span>
+        <div className="imageCenter">
+          <img
+            className="frontLogo"
+            src={require("../assets/images/HeaderLogo.jpg")}
+          />
         </div>
-        <table className="table table-hover">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Brewer</th>
-              <th>ABV</th>
-              <th>Price</th>
-              <th>Available</th>
-              <th> </th>
-            </tr>
-          </thead>
-          <tbody>
-            {this.state.drinks.map(drink => (
-              <tr key={drink._id}>
-                <td>{drink.name}</td>
-                <td>{drink.brewer}</td>
-                <td>{drink.abv}</td>
-                <td>{drink.price}</td>
-                <td>{drink.numberInStock}</td>
-                <button
-                  type="button"
-                  onClick={() => this.handleOrder({ drink })}
-                  disabled={this.getDisabledBool(drink)}
-                  className="btn btn-primary"
-                >
-                  Order
-                </button>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-        Favorite Food: <FontAwesomeIcon icon="igloo" />
+        <div className="mainBody">
+          <div className="cart">
+            <div className="cartItems">
+              <table className="table table-hover">
+                <thead>
+                  <tr>
+                    <th>Drink Ordered</th>
+                    <th>Number Ordered</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {drinksInCartArr.map(drink => (
+                    <tr>
+                      <td>{drink[0]}</td>
+                      <td>{drink[1]}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              <div style={this.getPriceTotalClassses()}>
+                ${this.state.drinksTotalPrice}
+              </div>
+            </div>
+          </div>
+          <div className="menu">
+            <table className="table table-hover">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Brewer</th>
+                  <th>ABV</th>
+                  <th>Price</th>
+                  <th>Available</th>
+                  <th> </th>
+                </tr>
+              </thead>
+              <tbody>
+                {this.state.drinks.map(drink => (
+                  <tr style={this.getStockCondition(drink)} key={drink._id}>
+                    <td>{drink.name}</td>
+                    <td>{drink.brewer}</td>
+                    <td>{drink.abv}</td>
+                    <td>{drink.price}</td>
+                    <td>{drink.numberInStock}</td>
+                    <button
+                      type="button"
+                      onClick={() => this.handleOrder({ drink })}
+                      disabled={this.getDisabledBool(drink)}
+                      className="btn btn-primary"
+                    >
+                      {this.getOrderCondition(drink)}
+                    </button>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
       </React.Fragment>
     );
   }
@@ -102,16 +125,10 @@ class Counter extends Component {
   // }
 
   getPriceTotalClassses() {
-    let displayFalse = {
-      display: "none"
-    };
-    let displayTrue = {
-      display: "inline"
-    };
     if (this.state.drinksTotalPrice === 0) {
-      return displayFalse;
+      return { display: "none" };
     } else {
-      return displayTrue;
+      return { display: "inline" };
     }
   }
 
@@ -120,6 +137,20 @@ class Counter extends Component {
       return true;
     } else {
       return false;
+    }
+  }
+
+  getStockCondition(drink) {
+    if (drink.numberInStock === 0) {
+      return { backgroundColor: "red" };
+    }
+  }
+
+  getOrderCondition(drink) {
+    if (drink.numberInStock === 0) {
+      return "Out of Stock";
+    } else {
+      return "Add";
     }
   }
 }
