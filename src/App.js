@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { faIgloo } from "@fortawesome/free-solid-svg-icons";
-import Counter from "./components/counter";
+import Counters from "./components/Counters";
 
 library.add(faIgloo);
 
@@ -9,7 +9,7 @@ class App extends Component {
   render() {
     return (
       <div>
-        <Counter />
+        <Counters />
       </div>
     );
   }
