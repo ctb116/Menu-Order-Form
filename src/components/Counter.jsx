@@ -1,12 +1,13 @@
 import React, { Component } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { getDrinks } from "../services/fakeDrinksService";
+import DrinksInCartFunctional from "./DrinksInCartFunctional";
 import "../styles/counter.css";
 
 class Counter extends Component {
   state = {
     drinks: getDrinks(),
-    drinksInCart: {},
+    drinksInCart: [],
     drinksTotalPrice: 0
   };
 
@@ -15,6 +16,14 @@ class Counter extends Component {
   //   this.handleDecrement = this.handleDecrement.bind(this);
   // }
 
+  handleDelete = drinkId => {
+    let drinksInCartArr = Object.entries(this.state.drinksInCart);
+    console.log(drinksInCartArr);
+    const drinksInCart = drinksInCartArr.filter(x => x.id !== drinkId);
+    this.setState({ drinksInCart: drinksInCart });
+    console.log("delete doed");
+  };
+
   handleDecrement = drink => {
     drink.drink.numberInStock -= 1;
     const drinkClicked = this.state.drinks.filter(d => d._id);
@@ -22,14 +31,18 @@ class Counter extends Component {
   };
 
   handleAddToCart = drink => {
+    const drinkOrderName = drink.drink.name;
+    const drinkOrderId = drink.drink._id;
     let drinksInCart = this.state.drinksInCart;
-    const drinkOrdered = drink.drink.name;
-    if (!drinksInCart[drinkOrdered]) {
-      drinksInCart[drinkOrdered] = 1;
+    let found = drinksInCart.some(function(el) {
+      return el.id === drinkOrderId;
+    });
+    if (!found) {
+      drinksInCart.push({ id: drinkOrderId, name: drinkOrderName, ordered: 1 });
     } else {
-      drinksInCart[drinkOrdered]++;
+      let objIndex = drinksInCart.findIndex(obj => obj.id === drinkOrderId);
+      drinksInCart[objIndex].ordered++;
     }
-    console.log(drinksInCart);
     this.setState({ drinksInCart });
   };
 
@@ -37,7 +50,6 @@ class Counter extends Component {
     let drinkPrice = drink.drink.price;
     let drinksTotalPrice = (this.state.drinksTotalPrice += drinkPrice);
     this.setState({ drinksTotalPrice });
-    console.log(drinksTotalPrice);
   };
 
   handleOrder = drink => {
@@ -47,31 +59,35 @@ class Counter extends Component {
   };
 
   render() {
-    let drinksInCartArr = Object.entries(this.state.drinksInCart);
     return (
       <React.Fragment>
         <div className="imageCenter">
           <img
             className="frontLogo"
             src={require("../assets/images/HeaderLogo.jpg")}
+            alt="header logo"
           />
         </div>
         <div className="mainBody">
           <div className="cart">
             <div className="cartItems">
-              <table className="table table-hover">
+              <table className="table table-hover table-dark">
                 <thead>
                   <tr>
-                    <th>Drink Ordered</th>
-                    <th>Number Ordered</th>
+                    <th scope="col">Drink Ordered</th>
+                    <th scope="col">Number Ordered</th>
+                    <th scope="col">Reduce Order</th>
+                    <th scope="col">Delete Order</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {drinksInCartArr.map(drink => (
-                    <tr>
-                      <td>{drink[0]}</td>
-                      <td>{drink[1]}</td>
-                    </tr>
+                  {this.state.drinksInCart.map(drink => (
+                    <DrinksInCartFunctional
+                      //id undefined - only passing name and amount to state drinksInCart object
+                      key={drink.id}
+                      onDelete={this.handleDelete}
+                      drink={drink}
+                    />
                   ))}
                 </tbody>
               </table>
