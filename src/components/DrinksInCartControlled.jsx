@@ -1,17 +1,23 @@
 import React, { Component } from "react";
 
-class DrinksInCartFunctional extends Component {
+class DrinksInCartControlled extends Component {
   render() {
     return (
       <tr>
         <td>{this.props.drink.name}</td>
         <td>{this.props.drink.ordered}</td>
         <td>
-          <button className="btn btn-danger btn-sm">Reduce</button>
+
+          <button
+            onClick={() => this.props.onReduce(this.props.drink)}
+            className="btn btn-danger btn-sm"
+          >
+            Reduce
+          </button>
         </td>
         <td>
           <button
-            onClick={() => this.props.onDelete(this.props.drink[0])}
+            onClick={() => this.props.onDelete(this.props.drink.id)}
             className="btn btn-primary btn-sm"
           >
             Delete
@@ -22,4 +28,4 @@ class DrinksInCartFunctional extends Component {
   }
 }
 
-export default DrinksInCartFunctional;
+export default DrinksInCartControlled;

@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 // import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { getDrinks } from "../services/fakeDrinksService";
-import DrinksInCartFunctional from "./DrinksInCartFunctional";
+import DrinksInCartControlled from "./DrinksInCartControlled";
+import DrinkMenu from "./DrinkMenu";
 import "../styles/counter.css";
 
 class Counter extends Component {
@@ -16,16 +17,24 @@ class Counter extends Component {
   //   this.handleDecrement = this.handleDecrement.bind(this);
   // }
 
+  handleReduce = drink => {
+    if (drink.ordered === 0) {
+    } else {
+      drink.ordered -= 1;
+    }
+    const drinksInCart = this.state.drinksInCart.filter(d => d.id);
+    this.setState({ drinksInCart });
+  };
+
   handleDelete = drinkId => {
-    let drinksInCartArr = Object.entries(this.state.drinksInCart);
-    console.log(drinksInCartArr);
-    const drinksInCart = drinksInCartArr.filter(x => x.id !== drinkId);
-    this.setState({ drinksInCart: drinksInCart });
-    console.log("delete doed");
+    const drinksInCart = this.state.drinksInCart.filter(
+      obj => obj.id !== drinkId
+    );
+    this.setState({ drinksInCart });
   };
 
   handleDecrement = drink => {
-    drink.drink.numberInStock -= 1;
+    drink.numberInStock -= 1;
     const drinkClicked = this.state.drinks.filter(d => d._id);
     this.setState({ drinkClicked });
   };
@@ -82,11 +91,11 @@ class Counter extends Component {
                 </thead>
                 <tbody>
                   {this.state.drinksInCart.map(drink => (
-                    <DrinksInCartFunctional
-                      //id undefined - only passing name and amount to state drinksInCart object
+                    <DrinksInCartControlled
                       key={drink.id}
-                      onDelete={this.handleDelete}
                       drink={drink}
+                      on={this.handleDelete}
+                      onReduce={this.handleReduce}
                     />
                   ))}
                 </tbody>
@@ -110,21 +119,13 @@ class Counter extends Component {
               </thead>
               <tbody>
                 {this.state.drinks.map(drink => (
-                  <tr style={this.getStockCondition(drink)} key={drink._id}>
-                    <td>{drink.name}</td>
-                    <td>{drink.brewer}</td>
-                    <td>{drink.abv}</td>
-                    <td>{drink.price}</td>
-                    <td>{drink.numberInStock}</td>
-                    <button
-                      type="button"
-                      onClick={() => this.handleOrder({ drink })}
-                      disabled={this.getDisabledBool(drink)}
-                      className="btn btn-primary"
-                    >
-                      {this.getOrderCondition(drink)}
-                    </button>
-                  </tr>
+                  <DrinkMenu
+                    key={drink._id}
+                    drink={drink}
+                    onStockCondition={this.getStockCondition}
+                    onAddToCart={this.handleDecrement}
+                    onZeroInStock={this.getOrderCondition}
+                  />
                 ))}
               </tbody>
             </table>
@@ -134,11 +135,11 @@ class Counter extends Component {
     );
   }
 
-  // getBadgeClasses() {
-  //   let classes = "badge badge-";
-  //   classes += this.state.count === 0 ? "warning" : "primary";
-  //   return classes;
-  // }
+  getBadgeClasses() {
+    let classes = "badge badge-";
+    classes += this.state.count === 0 ? "warning" : "primary";
+    return classes;
+  }
 
   getPriceTotalClassses() {
     if (this.state.drinksTotalPrice === 0) {
