@@ -12,10 +12,39 @@ class Counter extends Component {
     drinksTotalPrice: 0
   };
 
-  // constructor() {
-  //   super();
-  //   this.handleDecrement = this.handleDecrement.bind(this);
-  // }
+  handleOrder = drink => {
+    this.handleAddToCart(drink);
+    this.handleDecrement(drink);
+    this.handlePriceTotal(drink);
+  };
+
+  handleAddToCart = drink => {
+    let drinksInCart = this.state.drinksInCart;
+    let found = drinksInCart.some(function(el) {
+      return el.id === drink._id;
+    });
+    if (!found) {
+      let order = { id: drink._id, name: drink.name, ordered: 1 };
+      this.setState(prevState => ({
+        drinksInCart: [...prevState.drinksInCart, order]
+      }));
+    } else {
+      let objIndex = drinksInCart.findIndex(obj => obj.id === drink._id);
+      drinksInCart[objIndex].ordered++;
+      this.setState({ drinksInCart });
+    }
+  };
+
+  handleDecrement = drink => {
+    drink.numberInStock -= 1;
+    const drinkClicked = this.state.drinks.filter(d => d._id);
+    this.setState({ drinkClicked });
+  };
+
+  handlePriceTotal = drink => {
+    let drinksTotalPrice = this.state.drinksTotalPrice;
+    this.setState({ drinksTotalPrice: (drinksTotalPrice += drink.price) });
+  };
 
   handleReduce = drink => {
     if (drink.ordered === 0) {
@@ -33,41 +62,8 @@ class Counter extends Component {
     this.setState({ drinksInCart });
   };
 
-  handleDecrement = drink => {
-    drink.numberInStock -= 1;
-    const drinkClicked = this.state.drinks.filter(d => d._id);
-    this.setState({ drinkClicked });
-  };
-
-  handleAddToCart = drink => {
-    const drinkOrderName = drink.drink.name;
-    const drinkOrderId = drink.drink._id;
-    let drinksInCart = this.state.drinksInCart;
-    let found = drinksInCart.some(function(el) {
-      return el.id === drinkOrderId;
-    });
-    if (!found) {
-      drinksInCart.push({ id: drinkOrderId, name: drinkOrderName, ordered: 1 });
-    } else {
-      let objIndex = drinksInCart.findIndex(obj => obj.id === drinkOrderId);
-      drinksInCart[objIndex].ordered++;
-    }
-    this.setState({ drinksInCart });
-  };
-
-  handlePriceTotal = drink => {
-    let drinkPrice = drink.drink.price;
-    let drinksTotalPrice = (this.state.drinksTotalPrice += drinkPrice);
-    this.setState({ drinksTotalPrice });
-  };
-
-  handleOrder = drink => {
-    this.handleDecrement(drink);
-    this.handleAddToCart(drink);
-    this.handlePriceTotal(drink);
-  };
-
   render() {
+    console.log(this.state.drinksInCart);
     return (
       <React.Fragment>
         <div className="imageCenter">
@@ -94,7 +90,7 @@ class Counter extends Component {
                     <DrinksInCartControlled
                       key={drink.id}
                       drink={drink}
-                      on={this.handleDelete}
+                      onDelete={this.handleDelete}
                       onReduce={this.handleReduce}
                     />
                   ))}
@@ -122,8 +118,7 @@ class Counter extends Component {
                   <DrinkMenu
                     key={drink._id}
                     drink={drink}
-                    onStockCondition={this.getStockCondition}
-                    onAddToCart={this.handleDecrement}
+                    onAddToCart={this.handleOrder}
                     onZeroInStock={this.getOrderCondition}
                   />
                 ))}
@@ -135,31 +130,11 @@ class Counter extends Component {
     );
   }
 
-  getBadgeClasses() {
-    let classes = "badge badge-";
-    classes += this.state.count === 0 ? "warning" : "primary";
-    return classes;
-  }
-
   getPriceTotalClassses() {
     if (this.state.drinksTotalPrice === 0) {
       return { display: "none" };
     } else {
       return { display: "inline" };
-    }
-  }
-
-  getDisabledBool(drink) {
-    if (drink.numberInStock === 0) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  getStockCondition(drink) {
-    if (drink.numberInStock === 0) {
-      return { backgroundColor: "red" };
     }
   }
 
