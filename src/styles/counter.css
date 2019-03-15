@@ -1,6 +1,5 @@
-.mainBody {
-  padding-left: 20px;
-  padding-right: 20px;
+.tabs {
+  float: right;
 }
 
 .imageCenter {
@@ -8,27 +7,9 @@
 }
 
 .frontLogo {
-  border-radius: 2px;
-  height: 340px;
-  width: 410px;
-}
-
-.cart {
-  width: 32%;
-  height: 366px;
-  float: right;
-  border-width: 3px;
-  background-color: #25292c;
-}
-
-/* .cartItems {
-  border-width: 3px;
-  border-style: solid;
-  border-color: yellow;
-} */
-
-.menu {
-  position: absolute;
-  width: 62%;
-  display: inline-block;
+  position: relative;
+  z-index: -1;
+  height: 240px;
+  width: 310px;
+  margin-bottom: -37px;
 }

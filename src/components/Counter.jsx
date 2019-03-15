@@ -1,15 +1,26 @@
 import React, { Component } from "react";
 // import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Badge, TabContent, TabPane, Nav, NavItem, NavLink } from "reactstrap";
+import classnames from "classnames";
 import { getDrinks } from "../services/fakeDrinksService";
-import DrinksInCartControlled from "./DrinksInCartControlled";
 import DrinkMenu from "./DrinkMenu";
+import Header from "./Header";
+import Cart from "./Cart";
 import "../styles/counter.css";
 
 class Counter extends Component {
   state = {
     drinks: getDrinks(),
     drinksInCart: [],
-    drinksTotalPrice: 0
+    activeTab: "1"
+  };
+
+  toggle = tab => {
+    if (this.state.activeTab !== tab) {
+      this.setState({
+        activeTab: tab
+      });
+    }
   };
 
   handleOrder = drink => {
@@ -24,7 +35,12 @@ class Counter extends Component {
       return el.id === drink._id;
     });
     if (!found) {
-      let order = { id: drink._id, name: drink.name, ordered: 1 };
+      let order = {
+        id: drink._id,
+        name: drink.name,
+        price: drink.price,
+        ordered: 1
+      };
       this.setState(prevState => ({
         drinksInCart: [...prevState.drinksInCart, order]
       }));
@@ -47,61 +63,59 @@ class Counter extends Component {
   };
 
   handleReduce = drink => {
-    if (drink.ordered === 0) {
+    if (drink.ordered === 1) {
+      this.handleDelete(drink);
     } else {
+      let drinks = this.state.drinks;
+      let objIndex = drinks.findIndex(obj => obj._id === drink.id);
+      drinks[objIndex].numberInStock++;
       drink.ordered -= 1;
+      const drinksInCart = this.state.drinksInCart.filter(d => d.id);
+      this.setState({ drinksInCart, drinks });
     }
-    const drinksInCart = this.state.drinksInCart.filter(d => d.id);
-    this.setState({ drinksInCart });
   };
 
-  handleDelete = drinkId => {
+  handleDelete = drink => {
+    let drinks = this.state.drinks;
+    let objIndex = drinks.findIndex(obj => obj._id === drink.id);
+    drinks[objIndex].numberInStock += drink.ordered;
     const drinksInCart = this.state.drinksInCart.filter(
-      obj => obj.id !== drinkId
+      obj => obj.id !== drink.id
     );
-    this.setState({ drinksInCart });
+    this.setState({ drinksInCart, drinks });
   };
 
   render() {
-    console.log(this.state.drinksInCart);
     return (
       <React.Fragment>
-        <div className="imageCenter">
-          <img
-            className="frontLogo"
-            src={require("../assets/images/HeaderLogo.jpg")}
-            alt="header logo"
-          />
-        </div>
-        <div className="mainBody">
-          <div className="cart">
-            <div className="cartItems">
-              <table className="table table-hover table-dark">
-                <thead>
-                  <tr>
-                    <th scope="col">Drink Ordered</th>
-                    <th scope="col">Number Ordered</th>
-                    <th scope="col">Reduce Order</th>
-                    <th scope="col">Delete Order</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {this.state.drinksInCart.map(drink => (
-                    <DrinksInCartControlled
-                      key={drink.id}
-                      drink={drink}
-                      onDelete={this.handleDelete}
-                      onReduce={this.handleReduce}
-                    />
-                  ))}
-                </tbody>
-              </table>
-              <div style={this.getPriceTotalClassses()}>
-                ${this.state.drinksTotalPrice}
-              </div>
-            </div>
-          </div>
-          <div className="menu">
+        <Header />
+        <Nav tabs className="tabs">
+          <NavItem>
+            <NavLink
+              className={classnames({ active: this.state.activeTab === "1" })}
+              onClick={() => {
+                this.toggle("1");
+              }}
+            >
+              Menu
+            </NavLink>
+          </NavItem>
+          <NavItem>
+            <NavLink
+              className={classnames({ active: this.state.activeTab === "2" })}
+              onClick={() => {
+                this.toggle("2");
+              }}
+            >
+              Cart
+              {this.getItemsInCart() !== 0 ? (
+                <Badge>{this.getItemsInCart()}</Badge>
+              ) : null}
+            </NavLink>
+          </NavItem>
+        </Nav>
+        <TabContent activeTab={this.state.activeTab}>
+          <TabPane tabId="1">
             <table className="table table-hover">
               <thead>
                 <tr>
@@ -124,10 +138,29 @@ class Counter extends Component {
                 ))}
               </tbody>
             </table>
-          </div>
-        </div>
+          </TabPane>
+          <TabPane tabId="2">
+            {this.state.drinksInCart.length !== 0 ? (
+              <Cart
+                drinksInCart={this.state.drinksInCart}
+                onReduce={this.handleReduce}
+                onDelete={this.handleDelete}
+              />
+            ) : (
+              <p>you haven't orderd anything yet!</p>
+            )}
+          </TabPane>
+        </TabContent>
       </React.Fragment>
     );
+  }
+
+  getItemsInCart() {
+    let cartInt = 0;
+    this.state.drinksInCart.forEach(obj => {
+      cartInt += obj.ordered;
+    });
+    return cartInt;
   }
 
   getPriceTotalClassses() {

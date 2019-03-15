@@ -1,0 +1,16 @@
+#test {
+  height: 780px;
+}
+
+#carousel {
+  height: 100%;
+}
+
+.center-shadow {
+  position: relative;
+  z-index: 100;
+  margin-left: -30px;
+  margin-right: -30px;
+  box-shadow: 0 34px 0px 0px #d9dadc, 0 -34px 0px 0px #d9dadc,
+    24px 0 36px -4px rgba(0, 0, 0, 0.8), -24px 0 36px -4px rgba(0, 0, 0, 0.8);
+}
