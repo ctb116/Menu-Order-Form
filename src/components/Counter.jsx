@@ -1,6 +1,14 @@
 import React, { Component } from "react";
 // import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Badge, TabContent, TabPane, Nav, NavItem, NavLink } from "reactstrap";
+import {
+  Badge,
+  Table,
+  TabContent,
+  TabPane,
+  Nav,
+  NavItem,
+  NavLink
+} from "reactstrap";
 import classnames from "classnames";
 import { getDrinks } from "../services/fakeDrinksService";
 import DrinkMenu from "./DrinkMenu";
@@ -116,7 +124,7 @@ class Counter extends Component {
         </Nav>
         <TabContent activeTab={this.state.activeTab}>
           <TabPane tabId="1">
-            <table className="table table-hover">
+            <Table hover>
               <thead>
                 <tr>
                   <th>Name</th>
@@ -127,7 +135,7 @@ class Counter extends Component {
                   <th> </th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody id="test">
                 {this.state.drinks.map(drink => (
                   <DrinkMenu
                     key={drink._id}
@@ -137,7 +145,7 @@ class Counter extends Component {
                   />
                 ))}
               </tbody>
-            </table>
+            </Table>
           </TabPane>
           <TabPane tabId="2">
             {this.state.drinksInCart.length !== 0 ? (
