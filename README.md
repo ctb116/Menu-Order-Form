@@ -5,8 +5,8 @@ Contact: _**catherinetybradley@gmail.com**_</br>
 
 ## Description
 
-A menu for customers to order drinks.
-**live demo:** menu-order-form.herokuapp.com
+A menu for customers to order drinks.</br>
+**live demo:** https://menu-order-form.herokuapp.com/
 
 ## Setup/Installation Requirements
 
