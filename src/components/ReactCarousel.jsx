@@ -48,7 +48,6 @@ class ReactCarousel extends Component {
   }
 
   render() {
-    console.log(this.props);
     const { activeIndex } = this.state;
 
     const slides = this.props.advertArray.map(item => {

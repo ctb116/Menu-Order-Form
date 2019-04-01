@@ -1,15 +1,18 @@
 import React, { Component } from "react";
+import { Table } from "reactstrap";
 import DrinkCart from "./DrinkCart";
 
 class Cart extends Component {
   render() {
     return (
       <React.Fragment>
-        <table className="table table-hover table-dark">
+        <Table>
           <thead>
             <tr>
-              <th scope="col">Drink Ordered</th>
-              <th scope="col">Number Ordered</th>
+              <th>Drink Ordered</th>
+              <th>Number Ordered</th>
+              <th> </th>
+              <th> </th>
             </tr>
           </thead>
           <tbody>
@@ -22,8 +25,11 @@ class Cart extends Component {
               />
             ))}
           </tbody>
-        </table>
-        <p>{this.getTotalPrice()}</p>
+        </Table>
+        <div>
+          where are you seated?{" "}
+          <p>Your total cost is ${this.getTotalPrice()}</p>
+        </div>
       </React.Fragment>
     );
   }

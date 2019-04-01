@@ -5,8 +5,8 @@ Contact: _**catherinetybradley@gmail.com**_</br>
 
 ## Description
 
-A menu for customers to order drinks.
-**live demo:** menu-order-form.herokuapp.com
+A menu for customers to order drinks. This setup is designed to be used by a patron in a bar or restaurant. A patron can self order and select their table (wip) to then have their drinks be delivered by staff. To avoid asking patrons for card information, billing is handled by staff when the table is ready to pay.</br>
+**live demo:** https://menu-order-form.herokuapp.com
 
 ## Setup/Installation Requirements
 

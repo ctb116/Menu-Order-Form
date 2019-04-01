@@ -6,6 +6,18 @@
   text-align: center;
 }
 
+.emptycart {
+  text-align: center;
+}
+
+.emptycartbutton {
+  width: 220px;
+}
+
+.emptycartbutton p {
+  font-size: 22px;
+}
+
 .frontLogo {
   position: relative;
   z-index: -1;

@@ -1,11 +1,15 @@
 import React, { Component } from "react";
 import { library } from "@fortawesome/fontawesome-svg-core";
-import { faIgloo } from "@fortawesome/free-solid-svg-icons";
+import {
+  faGlassCheers,
+  faSadCry,
+  faQuestion,
+  faWineBottle
+} from "@fortawesome/free-solid-svg-icons";
 import CustomerView from "./components/CustomerView";
 import "./styles/App.css";
-// import DrinksInCart from "./components/DrinksInCart";
 
-library.add(faIgloo);
+library.add(faGlassCheers, faSadCry, faQuestion, faWineBottle);
 
 class App extends Component {
   render() {

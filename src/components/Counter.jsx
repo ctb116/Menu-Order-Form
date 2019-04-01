@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   Badge,
   Table,
@@ -11,9 +10,10 @@ import {
 } from "reactstrap";
 import classnames from "classnames";
 import { getDrinks } from "../services/fakeDrinksService";
-import DrinkMenu from "./DrinkMenu";
-import Header from "./Header";
 import Cart from "./Cart";
+import DrinkMenu from "./DrinkMenu";
+import EmptyCart from "./EmptyCart";
+import Header from "./Header";
 import "../styles/counter.css";
 
 class Counter extends Component {
@@ -155,7 +155,7 @@ class Counter extends Component {
                 onDelete={this.handleDelete}
               />
             ) : (
-              <p>you haven't orderd anything yet!</p>
+              <EmptyCart />
             )}
           </TabPane>
         </TabContent>
